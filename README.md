@@ -1,1 +1,1 @@
-# CA_GA_Cloud_Resource_Allocation
+# Cellular Automata with Genetic Algorithm for Cloud Resource Allocation
