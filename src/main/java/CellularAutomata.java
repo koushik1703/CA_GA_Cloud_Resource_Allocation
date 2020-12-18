@@ -53,7 +53,7 @@ public class CellularAutomata {
         int randomProbabilityFront = new Random().nextInt(10);
         int randomProbabilityBack = new Random().nextInt(10);
 
-        int totalProbability = randomProbabilityKminus + randomProbabilityKplus + randomProbabilityJminus + randomProbabilityJplus + randomProbabilityIminus + randomProbabilityIplus;
+        int totalProbability = randomProbabilityLeft + randomProbabilityRight + randomProbabilityUp + randomProbabilityDown + randomProbabilityFront + randomProbabilityBack;
         ArrayList<String> probabilityStrings = new ArrayList<String>();
 
         probabilityStrings = fillString(probabilityStrings, "Left", randomProbabilityLeft);
@@ -92,7 +92,7 @@ public class CellularAutomata {
                         case "Right":
                             if((hostIndex + 1) <= lastHost) {
                                 temp = child.dataCenter[columnIndex][rackIndex][hostIndex + 1];
-                                child.dataCenter[columnIndex][rackIndex[hostIndex + 1] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex + 1] = child.dataCenter[columnIndex][rackIndex][hostIndex];
                                 child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             } else {
