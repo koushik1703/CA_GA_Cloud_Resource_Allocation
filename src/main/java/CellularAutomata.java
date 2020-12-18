@@ -17,14 +17,14 @@ public class CellularAutomata {
         this.totalLoad = load;
         this.dataCenter = new int[this.column][this.rack][this.host];
 
-        for(int i = 0; i < this.column; i++) {
-            for(int j = 0; j < this.rack; j++) {
-                for(int k = 0; k < this.host; k++) {
-                    if(i == (this.column - 1)  && j == (this.rack - 1) && k == (this.host - 1))
-                        this.dataCenter[i][j][k] = load;
+        for(int columnIndex = 0; columnIndex < this.column; columnIndex++) {
+            for(int rackIndex = 0; rackIndex < this.rack; rackIndex++) {
+                for(int hostIndex = 0; hostIndex < this.host; hostIndex++) {
+                    if(columnIndex == (this.column - 1)  && rackIndex == (this.rack - 1) && hostIndex == (this.host - 1))
+                        this.dataCenter[columnIndex][rackIndex][hostIndex] = load;
                     else
-                        this.dataCenter[i][j][k] = new Random().nextInt(load);
-                    load = load - this.dataCenter[i][j][k];
+                        this.dataCenter[columnIndex][rackIndex][hostIndex] = new Random().nextInt(load);
+                    load = load - this.dataCenter[columnIndex][rackIndex][hostIndex];
                 }
             }
         }
@@ -38,112 +38,119 @@ public class CellularAutomata {
     public CellularAutomata evolve() {
         CellularAutomata child = new CellularAutomata(this.column, this.rack, this.host, this.totalLoad);
 
-        for(int i = 0; i < this.column; i++) {
-            for(int j = 0; j < this.rack; j++) {
-                for(int k = 0; k < this.host; k++) {
-                    child.dataCenter[i][j][k] = this.dataCenter[i][j][k];
+        for(int columnIndex = 0; columnIndex < this.column; columnIndex++) {
+            for(int rackIndex = 0; rackIndex < this.rack; rackIndex++) {
+                for(int hostIndex = 0; hostIndex < this.host; hostIndex++) {
+                    child.dataCenter[columnIndex][rackIndex][hostIndex] = this.dataCenter[columnIndex][rackIndex][hostIndex];
                 }
             }
         }
 
-        int randomProbabilityKminus = new Random().nextInt(10);
-        int randomProbabilityKplus = new Random().nextInt(10);
-        int randomProbabilityJminus = new Random().nextInt(10);
-        int randomProbabilityJplus = new Random().nextInt(10);
-        int randomProbabilityIminus = new Random().nextInt(10);
-        int randomProbabilityIplus = new Random().nextInt(10);
+        int randomProbabilityLeft = new Random().nextInt(10);
+        int randomProbabilityRight = new Random().nextInt(10);
+        int randomProbabilityUp = new Random().nextInt(10);
+        int randomProbabilityDown = new Random().nextInt(10);
+        int randomProbabilityFront = new Random().nextInt(10);
+        int randomProbabilityBack = new Random().nextInt(10);
 
         int totalProbability = randomProbabilityKminus + randomProbabilityKplus + randomProbabilityJminus + randomProbabilityJplus + randomProbabilityIminus + randomProbabilityIplus;
         ArrayList<String> probabilityStrings = new ArrayList<String>();
 
-        probabilityStrings = fillString(probabilityStrings, "kMinus", randomProbabilityKminus);
-        probabilityStrings = fillString(probabilityStrings, "kPlus", randomProbabilityKplus);
-        probabilityStrings = fillString(probabilityStrings, "jMinus", randomProbabilityJminus);
-        probabilityStrings = fillString(probabilityStrings, "jplus", randomProbabilityJplus);
-        probabilityStrings = fillString(probabilityStrings, "iMinus", randomProbabilityIminus);
-        probabilityStrings = fillString(probabilityStrings, "iplus", randomProbabilityIplus);
+        probabilityStrings = fillString(probabilityStrings, "Left", randomProbabilityLeft);
+        probabilityStrings = fillString(probabilityStrings, "Right", randomProbabilityRight);
+        probabilityStrings = fillString(probabilityStrings, "Up", randomProbabilityUp);
+        probabilityStrings = fillString(probabilityStrings, "Down", randomProbabilityDown);
+        probabilityStrings = fillString(probabilityStrings, "Front", randomProbabilityFront);
+        probabilityStrings = fillString(probabilityStrings, "Back", randomProbabilityBack);
 
-        for(int i = 0; i < this.column; i++) {
-            for(int j = 0; j < this.rack; j++) {
-                for(int k = 0; k < this.host; k++) {
+        int firstColumn = 0;
+        int lastColumn = this.column - 1;
+        int firstRack = 0;
+        int lastRack = this.rack - 1;
+        int firstHost = 0;
+        int lastHost = this.host - 1;
+
+        for(int columnIndex = 0; columnIndex < this.column; columnIndex++) {
+            for(int rackIndex = 0; rackIndex < this.rack; rackIndex++) {
+                for(int hostIndex = 0; hostIndex < this.host; hostIndex++) {
                     int selectedStringIndex = new Random().nextInt(totalProbability);
                     int temp;
                     switch (probabilityStrings.get(selectedStringIndex)) {
-                        case "kMinus":
-                            if((k - 1) >= 0) {
-                                temp = child.dataCenter[i][j][k - 1];
-                                child.dataCenter[i][j][k - 1] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                        case "Left":
+                            if((hostIndex - 1) >= firstHost) {
+                                temp = child.dataCenter[columnIndex][rackIndex][hostIndex - 1];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex - 1] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             } else {
-                                temp = child.dataCenter[i][j][this.host - 1];
-                                child.dataCenter[i][j][this.host - 1] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                                temp = child.dataCenter[columnIndex][rackIndex][lastHost];
+                                child.dataCenter[columnIndex][rackIndex][lastHost] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             }
 
-                        case "kPlus":
-                            if((k + 1) < this.host) {
-                                temp = child.dataCenter[i][j][k + 1];
-                                child.dataCenter[i][j][k + 1] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                        case "Right":
+                            if((hostIndex + 1) <= lastHost) {
+                                temp = child.dataCenter[columnIndex][rackIndex][hostIndex + 1];
+                                child.dataCenter[columnIndex][rackIndex[hostIndex + 1] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             } else {
-                                temp = child.dataCenter[i][j][0];
-                                child.dataCenter[i][j][0] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                                temp = child.dataCenter[columnIndex][rackIndex][firstHost];
+                                child.dataCenter[columnIndex][rackIndex][firstHost] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             }
 
-                        case "jMinus":
-                            if((j - 1) >= 0) {
-                                temp = child.dataCenter[i][j - 1][k];
-                                child.dataCenter[i][j - 1][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                        case "Up":
+                            if((rackIndex - 1) >= firstRack) {
+                                temp = child.dataCenter[columnIndex][rackIndex - 1][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex - 1][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             } else {
-                                temp = child.dataCenter[i][this.rack - 1][k];
-                                child.dataCenter[i][this.rack - 1][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                                temp = child.dataCenter[columnIndex][lastRack][hostIndex];
+                                child.dataCenter[columnIndex][lastRack][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             }
 
-                        case "jPlus":
-                            if((j + 1) < this.rack) {
-                                temp = child.dataCenter[i][j + 1][k];
-                                child.dataCenter[i][j + 1][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                        case "Down":
+                            if((rackIndex + 1) <= lastRack) {
+                                temp = child.dataCenter[columnIndex][rackIndex + 1][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex + 1][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             } else {
-                                temp = child.dataCenter[i][0][k];
-                                child.dataCenter[i][0][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                                temp = child.dataCenter[columnIndex][firstRack][hostIndex];
+                                child.dataCenter[columnIndex][firstRack][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             }
 
-                        case "iMinus":
-                            if((i - 1) >= 0) {
-                                temp = child.dataCenter[i - 1][j][k];
-                                child.dataCenter[i - 1][j][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                        case "Front":
+                            if((columnIndex - 1) >= firstColumn) {
+                                temp = child.dataCenter[columnIndex - 1][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex - 1][rackIndex][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             } else {
-                                temp = child.dataCenter[this.column - 1][j][k];
-                                child.dataCenter[this.column - 1][j][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                                temp = child.dataCenter[lastColumn][rackIndex][hostIndex];
+                                child.dataCenter[lastColumn][rackIndex][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             }
 
-                        case "iPlus":
-                            if((i + 1) < this.column) {
-                                temp = child.dataCenter[i + 1][j][k];
-                                child.dataCenter[i + 1][j][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                        case "Back":
+                            if((columnIndex + 1) <= lastColumn) {
+                                temp = child.dataCenter[columnIndex + 1][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex + 1][rackIndex][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             } else {
-                                temp = child.dataCenter[0][j][k];
-                                child.dataCenter[0][j][k] = child.dataCenter[i][j][k];
-                                child.dataCenter[i][j][k] = temp;
+                                temp = child.dataCenter[firstColumn][rackIndex][hostIndex];
+                                child.dataCenter[firstColumn][rackIndex][hostIndex] = child.dataCenter[columnIndex][rackIndex][hostIndex];
+                                child.dataCenter[columnIndex][rackIndex][hostIndex] = temp;
                                 break;
                             }
                     }
