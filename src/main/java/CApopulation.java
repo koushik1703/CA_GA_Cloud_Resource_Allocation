@@ -15,10 +15,8 @@ public class CApopulation {
         int hosts = Integer.parseInt(Configuration.getConfig("Hosts"));
         int totalLoad = Integer.parseInt(Configuration.getConfig("TotalLoad"));
 
-        boolean print = true;
         for(int caIndex = 0; caIndex < this.caPopulation.length; caIndex++) {
-            this.caPopulation[caIndex] = new CellularAutomata(columns, racks, hosts, totalLoad, print);
-            print = false;
+            this.caPopulation[caIndex] = new CellularAutomata(columns, racks, hosts, totalLoad);
         }
 
         calcFitness();

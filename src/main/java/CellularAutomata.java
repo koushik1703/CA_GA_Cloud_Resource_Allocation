@@ -10,7 +10,7 @@ public class CellularAutomata {
     float fitness;
     int dataCenter[][][];
 
-    public CellularAutomata(int length, int width, int height, int load, boolean print) {
+    public CellularAutomata(int length, int width, int height, int load) {
         this.column = length;
         this.rack = width;
         this.host = height;
@@ -38,7 +38,7 @@ public class CellularAutomata {
     }
 
     public CellularAutomata evolve() {
-        CellularAutomata child = new CellularAutomata(this.column, this.rack, this.host, this.totalLoad, false);
+        CellularAutomata child = new CellularAutomata(this.column, this.rack, this.host, this.totalLoad);
 
         for(int columnIndex = 0; columnIndex < this.column; columnIndex++) {
             for(int rackIndex = 0; rackIndex < this.rack; rackIndex++) {
