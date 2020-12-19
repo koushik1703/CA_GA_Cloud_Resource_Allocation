@@ -29,7 +29,7 @@ public class CellularAutomata {
 
         this.dataCenter[this.column - 1][this.rack - 1][this.host - 1] = load;
 
-	this.dataCenter = CAsorter.sort(this.dataCenter);
+        this.dataCenter = CAsorter.sort(this.dataCenter);
     }
 
     public void fitness() {
