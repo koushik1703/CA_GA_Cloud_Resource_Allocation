@@ -166,4 +166,29 @@ public class CellularAutomata {
         }
         return probabilityStrings;
     }
+
+    public void mutate(float mutationRate) {
+        for(int columnIndex = 0; columnIndex < this.column; columnIndex++) {
+            for(int rackIndex = 0; rackIndex < this.rack; rackIndex++) {
+                for(int hostIndex = 0; hostIndex < this.host; hostIndex++) {
+                    if(new Random().nextFloat() < mutationRate) {
+                        int operationToBeSelected = new Random().nextInt(2);
+                        int randomColumn = new Random().nextInt(this.column);
+                        int randomRack = new Random().nextInt(this.rack);
+                        int randomHost = new Random().nextInt(this.host);
+
+                        if (operationToBeSelected == 0) {
+                            int randomValueToSubract = new Random().nextInt(dataCenter[columnIndex][rackIndex][hostIndex]);
+                            dataCenter[columnIndex][rackIndex][hostIndex] = dataCenter[columnIndex][rackIndex][hostIndex] - randomValueToSubract;
+                            dataCenter[randomColumn][randomRack][randomHost] = dataCenter[randomColumn][randomRack][randomHost] + randomValueToSubract;
+                        } else {
+                            int randomValueToAdd = new Random().nextInt(dataCenter[randomColumn][randomRack][randomHost]);
+                            dataCenter[columnIndex][rackIndex][hostIndex] = dataCenter[columnIndex][rackIndex][hostIndex] + randomValueToAdd;
+                            dataCenter[randomColumn][randomRack][randomHost] = dataCenter[randomColumn][randomRack][randomHost] - randomValueToAdd;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

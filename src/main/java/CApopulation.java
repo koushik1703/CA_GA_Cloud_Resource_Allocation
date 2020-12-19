@@ -5,14 +5,15 @@ public class CApopulation {
     CellularAutomata[] caPopulation;
     ArrayList<CellularAutomata> matingPool;
     int generation;
+    float mutationRate;
 
-    public CApopulation(int populationCount) {
+    public CApopulation(int populationCount, float mutationRate) {
         this.caPopulation = new CellularAutomata[populationCount];
 
-        int columns = Configuration.getConfig("Columns");
-        int racks = Configuration.getConfig("Racks");
-        int hosts = Configuration.getConfig("Hosts");
-        int totalLoad = Configuration.getConfig("TotalLoad");
+        int columns = Integer.parseInt(Configuration.getConfig("Columns"));
+        int racks = Integer.parseInt(Configuration.getConfig("Racks"));
+        int hosts = Integer.parseInt(Configuration.getConfig("Hosts"));
+        int totalLoad = Integer.parseInt(Configuration.getConfig("TotalLoad"));
 
         for(int caIndex = 0; caIndex < this.caPopulation.length; caIndex++) {
             this.caPopulation[caIndex] = new CellularAutomata(columns, racks, hosts, totalLoad);
@@ -22,6 +23,7 @@ public class CApopulation {
 
         this.matingPool = new ArrayList<CellularAutomata>();
         this.generation = 1;
+        this.mutationRate = mutationRate;
     }
 
     public void calcFitness() {

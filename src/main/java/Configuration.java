@@ -5,7 +5,7 @@ import java.util.Properties;
 public class Configuration {
     static File configFile = new File("src/main/resources/Configuration.properties");
 
-    public static int getConfig(String key) {
+    public static String getConfig(String key) {
         String value = "";
         try {
             FileReader reader = new FileReader(configFile);
@@ -17,6 +17,6 @@ public class Configuration {
         } catch(Exception e) {
             System.out.println(e);
         }
-        return Integer.parseInt(value);
+        return value;
     }
 }

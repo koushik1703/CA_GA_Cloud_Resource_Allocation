@@ -2,10 +2,14 @@ import org.cloudbus.cloudsim.power.models.*;
 
 public class ResourceAllocation {
     public static void main(String []args) {
-        int populationCount = 100;
-        CApopulation caPopulation = new CApopulation(populationCount);
 
-        for(int i = 0; i < 100; i++) {
+    	int populationCount = Integer.parseInt(Configuration.getConfig("Population"));
+    	float mutationRate = Float.parseFloat(Configuration.getConfig("MutationRate"));
+    	int numberOfEvolution = Integer.parseInt(Configuration.getConfig("NumberOfEvolution"));
+    	
+        CApopulation caPopulation = new CApopulation(populationCount, mutationRate);
+
+        for(int i = 0; i < numberOfEvolution; i++) {
             caPopulation.naturalSelection();
             caPopulation.generate();
 
