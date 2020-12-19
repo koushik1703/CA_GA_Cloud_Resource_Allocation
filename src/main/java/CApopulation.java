@@ -15,8 +15,10 @@ public class CApopulation {
         int hosts = Integer.parseInt(Configuration.getConfig("Hosts"));
         int totalLoad = Integer.parseInt(Configuration.getConfig("TotalLoad"));
 
+        boolean print = true;
         for(int caIndex = 0; caIndex < this.caPopulation.length; caIndex++) {
-            this.caPopulation[caIndex] = new CellularAutomata(columns, racks, hosts, totalLoad);
+            this.caPopulation[caIndex] = new CellularAutomata(columns, racks, hosts, totalLoad, print);
+            print = false;
         }
 
         calcFitness();
@@ -56,6 +58,7 @@ public class CApopulation {
             int p = new Random().nextInt(this.matingPool.size());
             CellularAutomata parent = this.matingPool.get(p);
             this.caPopulation[caIndex] = parent.evolve();
+            this.caPopulation[caIndex].mutate(mutationRate);
         }
         this.generation++;
     }

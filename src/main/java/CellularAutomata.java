@@ -10,24 +10,26 @@ public class CellularAutomata {
     float fitness;
     int dataCenter[][][];
 
-    public CellularAutomata(int length, int width, int height, int load) {
+    public CellularAutomata(int length, int width, int height, int load, boolean print) {
         this.column = length;
         this.rack = width;
         this.host = height;
         this.totalLoad = load;
         this.dataCenter = new int[this.column][this.rack][this.host];
 
+        load = load - (this.column * this.rack * this.host);
+        
         for(int columnIndex = 0; columnIndex < this.column; columnIndex++) {
             for(int rackIndex = 0; rackIndex < this.rack; rackIndex++) {
                 for(int hostIndex = 0; hostIndex < this.host; hostIndex++) {
-                    if(columnIndex == (this.column - 1)  && rackIndex == (this.rack - 1) && hostIndex == (this.host - 1))
-                        this.dataCenter[columnIndex][rackIndex][hostIndex] = load;
-                    else
-                        this.dataCenter[columnIndex][rackIndex][hostIndex] = new Random().nextInt(load);
-                    load = load - this.dataCenter[columnIndex][rackIndex][hostIndex];
+                    dataCenter[columnIndex][rackIndex][hostIndex] = new Random().nextInt(load);
                 }
             }
         }
+
+        this.dataCenter[this.column - 1][this.rack - 1][this.host - 1] = load;
+
+		this.dataCenter = CAsorter.sort(this.dataCenter);
     }
 
     public void fitness() {
@@ -36,7 +38,7 @@ public class CellularAutomata {
     }
 
     public CellularAutomata evolve() {
-        CellularAutomata child = new CellularAutomata(this.column, this.rack, this.host, this.totalLoad);
+        CellularAutomata child = new CellularAutomata(this.column, this.rack, this.host, this.totalLoad, false);
 
         for(int columnIndex = 0; columnIndex < this.column; columnIndex++) {
             for(int rackIndex = 0; rackIndex < this.rack; rackIndex++) {
@@ -178,13 +180,13 @@ public class CellularAutomata {
                         int randomHost = new Random().nextInt(this.host);
 
                         if (operationToBeSelected == 0) {
-                            int randomValueToSubract = new Random().nextInt(dataCenter[columnIndex][rackIndex][hostIndex]);
-                            dataCenter[columnIndex][rackIndex][hostIndex] = dataCenter[columnIndex][rackIndex][hostIndex] - randomValueToSubract;
-                            dataCenter[randomColumn][randomRack][randomHost] = dataCenter[randomColumn][randomRack][randomHost] + randomValueToSubract;
+                            int randomValueToSubract = new Random().nextInt(this.dataCenter[columnIndex][rackIndex][hostIndex]);
+                            this.dataCenter[columnIndex][rackIndex][hostIndex] = this.dataCenter[columnIndex][rackIndex][hostIndex] - randomValueToSubract;
+                            this.dataCenter[randomColumn][randomRack][randomHost] = this.dataCenter[randomColumn][randomRack][randomHost] + randomValueToSubract;
                         } else {
-                            int randomValueToAdd = new Random().nextInt(dataCenter[randomColumn][randomRack][randomHost]);
-                            dataCenter[columnIndex][rackIndex][hostIndex] = dataCenter[columnIndex][rackIndex][hostIndex] + randomValueToAdd;
-                            dataCenter[randomColumn][randomRack][randomHost] = dataCenter[randomColumn][randomRack][randomHost] - randomValueToAdd;
+                            int randomValueToAdd = new Random().nextInt(this.dataCenter[randomColumn][randomRack][randomHost]);
+                            this.dataCenter[columnIndex][rackIndex][hostIndex] = this.dataCenter[columnIndex][rackIndex][hostIndex] + randomValueToAdd;
+                            this.dataCenter[randomColumn][randomRack][randomHost] = this.dataCenter[randomColumn][randomRack][randomHost] - randomValueToAdd;
                         }
                     }
                 }
